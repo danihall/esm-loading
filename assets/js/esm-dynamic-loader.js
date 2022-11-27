@@ -1,8 +1,9 @@
-import notifier from "coreComponents/utils/notifier";
-import { unBracket } from "coreComponents/utils/unbracket";
+import * as pubsub from "utils/pubsub";
+import { unBracket } from "utils/unbracket";
 
 const loadingMap = JSON.parse( document.getElementById( "esm-loading-map" ).textContent );
 let onClickSelectors = loadingMap.onClick && Object.keys( loadingMap.onClick );
+let onFocusin = loadingMap.onFocusin && Object.keys( loadingMap.onFocusin );
 let onIntersectSelectors = loadingMap.onIntersection && Object.keys( loadingMap.onIntersection );
 let onInjectionSelectors = loadingMap.onInjection && Object.keys( loadingMap.onInjection );
 let onCompleteSelectors = loadingMap.onComplete && Object.keys( loadingMap.onComplete );
@@ -15,7 +16,7 @@ if ( onIntersectSelectors ) {
     onIntersectSelectors.forEach( selector => intersectionObserver.observe( document.body.querySelector( selector ) ) );
 }
 if ( onInjectionSelectors ) {
-    notifier.subscribe( "html-injected", _onInjection );
+    pubsub.subscribe( "html-injected", _onInjection );
 }
 if ( onCompleteSelectors ) {
     if ( document.readyState !== "complete" ) {
@@ -89,7 +90,7 @@ function _onInjection( data ) {
 
         if ( !onInjectionSelectors.length ) {
             onInjectionSelectors = null;
-            notifier.unSubscribe( "html-injected", _onInjection );
+            pubsub.unSubscribe( "html-injected", _onInjection );
         }
 
         Promise.all( keysToLoad.map( loadModule, loadingMap.onInjection ) );

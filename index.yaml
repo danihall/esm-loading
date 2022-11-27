@@ -1,0 +1,9 @@
+modules:
+    esm-dynamic-loader:
+    input-select.js:
+        loadingPoint: focusin
+    nav.js:
+        loadingPoint: onclick
+domPolyfills:
+    - whatwg-fetch
+    - element-closest-polyfill
