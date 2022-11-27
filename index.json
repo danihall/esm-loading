@@ -1,0 +1,10 @@
+{
+    "modules": {
+        "input-select.js": {"loadingPoint": "focusin"},
+        "nav.js": {"loadingPoint": "onclick"}
+    },
+    "domPolyfills": [
+        "whatwg-fetch",
+        "element-closest-polyfill"
+    ]
+}
