@@ -52,7 +52,7 @@ A quick dumb example of an output:
 ```
 
 
-The resulting graph can be used server-side to add <script type="module"> (for main modules) and <link rel="modulepreload"> (for their dependencies) to a page.
+The resulting graph can be used server-side to add `<script type="module">` (for main modules) and `<link rel="modulepreload">` (for their dependencies) to a page.
 
 This way, only the strict necessary JS is loaded on a page, something that is impossible with a classic bundle.js.
 
