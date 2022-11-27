@@ -14,7 +14,9 @@ Instead of creating a bundle that concatenates all JS files, with ES-Modules it'
 
 Those are just the plain-to-see advantages, but why not go further and dynamically load es-modules on user interaction?
 This way, only one (tiny) file is needed on page load, the rest is loaded individually on demand.
+
 Since most of the time we write JS scripts that respond to a user interaction, we can load an es-module when a specific `Event` is registered on specific `HTMLElement`.
+
 All sorts of event are very well suited for this kind of logic, any event that can be delegated can be the "trigger" of an es-module loading.
 This repo consists of:
 - a Rollup config that analyses js files and builds a graph as a JSON to map modules to their dependencies (as well as other optional stuff)
@@ -23,7 +25,7 @@ This repo consists of:
 ## how does it work?
 Rollup is used with a specific config to build files and do the "Rollup things" like tree-shaking, minifying, etc.
 Added to the final ouput, Rollup API is used to create a `graph.json` that will contain key information about each module you wish to load on the browser.
-A quick dumb example:
+A quick dumb example of an output:
 ```json
 [
   "module_1.js": {
