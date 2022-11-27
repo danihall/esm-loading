@@ -27,7 +27,18 @@ This repo consists of:
 Rollup is used with a specific config to build files and do the "Rollup things" like tree-shaking, minifying, etc.
 Added to the final ouput, Rollup API is used to create a `graph.json` that will contain key information about each module you wish to load on the browser.
 
-A quick dumb example of an output:
+The entry point of your files fed to Rollup should be a `index.json`, having this shape:
+```json
+{
+  "modules": {
+    "module_1.js": { "loadingPoint": "click" },
+    "modules_2.js": { "loadingPoint": "focusin" }
+  },
+  "domPolyfills": [...dom api that are not polyfilled by Babel]
+}
+```
+
+A quick dumb example of an output given the aformentionned `index.js`:
 ```json
 [
   "module_1.js": {
