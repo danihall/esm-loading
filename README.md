@@ -34,7 +34,9 @@ The entry point of your files fed to Rollup should be a `index.json`, having thi
     "module_1.js": { "loadingPoint": "click" },
     "modules_2.js": { "loadingPoint": "focusin" }
   },
-  "domPolyfills": [dom, apis, that, aren't, polyfilled, by, Babel]
+  "domPolyfills": [
+    ...dom APis that aren't poyfilled by Babel
+  ]
 }
 ```
 
