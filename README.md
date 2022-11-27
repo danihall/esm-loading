@@ -1,5 +1,5 @@
 # esm-loading
-example of implementation of an es-modules based loading strategy
+Configuration for efficient ES modules loading
 
 ## what's this for ?
 This repo demonstrates how to efficiently load JS files on a website.
