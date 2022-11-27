@@ -18,13 +18,15 @@ This way, only one (tiny) file is needed on page load, the rest is loaded indivi
 Since most of the time we write JS scripts that respond to a user interaction, we can load an es-module when a specific `Event` is registered on specific `HTMLElement`.
 
 All sorts of event are very well suited for this kind of logic, any event that can be delegated can be the "trigger" of an es-module loading.
+
+## how does it work?
 This repo consists of:
 - a Rollup config that analyses js files and builds a graph as a JSON to map modules to their dependencies (as well as other optional stuff)
 - a module `esm-loading.js` whose purpose is to dynamically load modules following the logic previously mentionned.
 
-## how does it work?
 Rollup is used with a specific config to build files and do the "Rollup things" like tree-shaking, minifying, etc.
 Added to the final ouput, Rollup API is used to create a `graph.json` that will contain key information about each module you wish to load on the browser.
+
 A quick dumb example of an output:
 ```json
 [
