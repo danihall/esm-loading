@@ -8,8 +8,8 @@
   "private": false,
   "type": "module",
   "scripts": {
-    "dev": "rm -rf dist/dev/js rollup --environment NODE_ENV:dev --config --watch",
-    "prod": "rm -rf dist/prod/js rollup --environment NODE_ENV:prod --config"
+    "dev": "rm -rf dist/dev/js && rollup --environment NODE_ENV:dev --config --watch",
+    "prod": "rm -rf dist/prod/js && rollup --environment NODE_ENV:prod --config"
   },
   "devDependencies": {
     "@babel/core": "^7.20.5",
