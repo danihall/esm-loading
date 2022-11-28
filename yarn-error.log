@@ -1,0 +1,44 @@
+Arguments: 
+  /Users/danielhalle/.nvm/versions/node/v16.12.0/bin/node /opt/local/libexec/yarn/bin/yarn.js dev
+
+PATH: 
+  /Users/danielhalle/.nvm/versions/node/v16.12.0/bin:/usr/local/opt/mysql@5.7/bin:/usr/local/opt/php@7.4/sbin:/usr/local/opt/php@7.4/bin:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Users/danielhalle/.cargo/bin
+
+Yarn version: 
+  1.21.1
+
+Node version: 
+  16.12.0
+
+Platform: 
+  darwin x64
+
+Trace: 
+  SyntaxError: /Users/danielhalle/Desktop/esm-loading/package.json: Unexpected token } in JSON at position 391
+      at JSON.parse (<anonymous>)
+      at /opt/local/libexec/yarn/lib/cli.js:1625:59
+      at Generator.next (<anonymous>)
+      at step (/opt/local/libexec/yarn/lib/cli.js:310:30)
+      at /opt/local/libexec/yarn/lib/cli.js:321:13
+
+npm manifest: 
+  {
+    "name": "esm-loading",
+    "version": "1.0.0",
+    "main": "index.js",
+    "repository": "https://github.com/danihall/esm-loading.git",
+    "author": "Daniel Hallé <danielhalle82@gmail.com>",
+    "license": "MIT",
+    "private": false,
+    "type": "module",
+    "scripts": {
+      "dev": "rollup --environment NODE_ENV:dev --config --watch",
+      "prod": "rollup --environment NODE_ENV:prod --config"
+    },
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

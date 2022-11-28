@@ -1,24 +1,25 @@
-import { modules, domPolyfills } from "./assets/js/index.json";
-import { devDependencies } from "./package.json";
+//import { modules, domPolyfills } from "./assets/js/index.json";
+//import { devDependencies } from "./package.json";
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
+const { devDependencies } = JSON.parse( fs.readFileSync( "./package.json" ) );
+const { modules, domPolyfills } = JSON.parse( fs.readFileSync( "./assets/js/index.json" ) );
 
 const MODE_PROD = process.env.NODE_ENV === "prod";
 
 const JS_PATH = path.resolve( "assets/js" );
-const CORE_COMPONENTS_PATH = path.resolve( "vendor/newebfront/core-components/assets/js" );
-const DIST_PATH = path.resolve( MODE_PROD ? "Resources/public/build/js" : "public/assets/build/js" );
+const DIST_PATH = path.resolve( MODE_PROD ? "dist/prod/js" : "dist/dev/js" );
 
-const replacer = ( match ) => match === "coreComponents" ? CORE_COMPONENTS_PATH : `${JS_PATH}/${match}`;
-const getModuleAbsolutePath = ( [ file, options ] ) => [ file.replace( /coreComponents|.+/, replacer ), options ];
+const replacer = ( match ) => `${JS_PATH}/${match}`;
+const getModuleAbsolutePath = ( [ file, options ] ) => [ file.replace( /.*/, replacer ), options ];
 const writeImport = ( file ) => `import "${file}";`;
 
 const MODULES = Object.fromEntries( Object.entries( modules ).map( getModuleAbsolutePath ) );//clone de modules.json mais avec des chemins absolus.
 const VIRTUAL_ENTRY = Object.keys( MODULES ).map( writeImport ).join( "" );// tableau d'imports à faire analyser par Rollup.
 const VIRTUAL_LEGACY_ENTRY = domPolyfills.map( writeImport ).join( "" ) + VIRTUAL_ENTRY.replace( /import[^;]*esm-dynamic-loader[^;]*;/, "" );// supprime l'entrée esm-loader
 
-const SELECTOR_INIT_REGEX = /(?:selectorInit:)(?:\s*)(?:"|')((.(?!,|\n|}))*)/;
+const SELECTOR_INIT_REGEX = /(?:selectorInit)(?:"|\s|=)*([^"]*)/;
 
 const MODULES_GRAPH = [];// Contiendra les arbres de dépendances "composant -> helpers" pour chaque module.
 
@@ -36,7 +37,7 @@ const splitChunks = ( id ) => {
     if ( id.includes( "virtual-entry" ) ) {
         return id;// Nécessaire de découper ces chunks à part pour éviter des dépendances circulaires.
     }
-    if ( id.includes( JS_PATH ) || id.includes( CORE_COMPONENTS_PATH ) ) {
+    if ( id.includes( JS_PATH ) ) {
         return getFileName( id );// chunks des JS maison.
     }
     if ( id.includes( "node_modules" ) && !id.includes( "core-js" ) ) {
@@ -55,7 +56,7 @@ const splitChunks = ( id ) => {
         fileExtension: /.js|.mjs/,
         optionName: /priority|loadingPoint/,
         priority: /low|high|very-high/,
-        loadingPoint: /static|onClick|onIntersection|onInjection|onComplete/
+        loadingPoint: /static|onClick|onFocusIn|onIntersection|onInjection|onComplete/
     };
     const getInvalidOptions = ( options ) => Object.entries( options )
         .map( ( [ name, value ] ) => [
@@ -94,7 +95,6 @@ const splitChunks = ( id ) => {
 export {
     MODE_PROD,
     JS_PATH,
-    CORE_COMPONENTS_PATH,
     DIST_PATH,
     MODULES,
     VIRTUAL_ENTRY,

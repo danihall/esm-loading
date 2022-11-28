@@ -1,5 +1,5 @@
-import * as pubsub from "./utils/pubsub";
-import { unBracket } from "./utils/unbracket";
+import { s as subscribe, u as unSubscribe } from './pubsub-267f5d93.js';
+import { u as unBracket } from './unbracket-8b69dca6.js';
 
 const loadingMap = JSON.parse( document.getElementById( "esm-loading-map" ).textContent );
 let onClickSelectors = loadingMap.onClick && Object.keys( loadingMap.onClick );
@@ -20,7 +20,7 @@ if ( onIntersectSelectors ) {
     onIntersectSelectors.forEach( selector => intersectionObserver.observe( document.body.querySelector( selector ) ) );
 }
 if ( onInjectionSelectors ) {
-    pubsub.subscribe( "html-injected", _onInjection );
+    subscribe( "html-injected", _onInjection );
 }
 if ( onCompleteSelectors ) {
     if ( document.readyState !== "complete" ) {
@@ -52,8 +52,7 @@ function _onClick( event ) {
         Promise.all( keysToLoad.map( loadModule, loadingMap.onClick ) )
         .then( () => event.target.dispatchEvent( new Event( event.type, event ) ) );
     }
-};
-
+}
 /**
  * @param {Event} event
  */
@@ -113,13 +112,12 @@ function _onInjection( data ) {
 
         if ( !onInjectionSelectors.length ) {
             onInjectionSelectors = null;
-            pubsub.unSubscribe( "html-injected", _onInjection );
+            unSubscribe( "html-injected", _onInjection );
         }
 
         Promise.all( keysToLoad.map( loadModule, loadingMap.onInjection ) );
     }
-};
-
+}
 function _onComplete() {
     this.removeEventListener( "load", _onComplete );
     Promise.all( Object.keys( loadingMap.onComplete ).map( loadModule, loadingMap.onComplete ) );

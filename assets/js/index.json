@@ -1,0 +1,11 @@
+{
+    "modules": {
+      "esm-dynamic-loader.js": {},
+      "input-select.js": {"loadingPoint": "onFocusIn"},
+      "nav.js": {"loadingPoint": "onClick"}
+    },
+    "domPolyfills": [
+      "whatwg-fetch",
+      "element-closest-polyfill"
+    ]
+  }

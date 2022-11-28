@@ -1,0 +1,29 @@
+{
+  "name": "esm-loading",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/danihall/esm-loading.git",
+  "author": "Daniel Hallé <danielhalle82@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "type": "module",
+  "scripts": {
+    "dev": "rollup --environment NODE_ENV:dev --config --watch",
+    "prod": "rollup --environment NODE_ENV:prod --config"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.5",
+    "@babel/preset-env": "^7.20.2",
+    "@rollup/plugin-babel": "^6.0.3",
+    "@rollup/plugin-commonjs": "^23.0.3",
+    "@rollup/plugin-json": "^5.0.2",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@rollup/plugin-virtual": "^3.0.1",
+    "babel-plugin-transform-remove-console": "^6.9.4",
+    "element-closest-polyfill": "^1.0.5",
+    "eslint": "^8.28.0",
+    "rollup": "^3.5.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "whatwg-fetch": "^3.6.2"
+  }
+}

@@ -1,5 +1,7 @@
-const selectorInit = "input";
-const input = document.querySelector( selectorInit );
+const init = {
+    selectorInit: "input"
+};
+const input = document.querySelector( init.selectorInit );
 
 input.addEventListener( "input", _onInput );
 

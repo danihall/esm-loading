@@ -3,7 +3,6 @@ import * as $ from "./rollup.constants.js";// Chemins absolut et helpers.
 import { rollup } from "rollup";
 import { terser } from "rollup-plugin-terser";
 import virtual from "@rollup/plugin-virtual";
-import alias from "@rollup/plugin-alias";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
@@ -120,8 +119,7 @@ const noModuleConfig = {
     watch: false, // Pas besoin de générer ce bundle en mode dev (@see package.json -> "scripts" -> "dev").
     plugins: [
         virtual( { "virtual-legacy-entry": $.VIRTUAL_LEGACY_ENTRY } ),
-        alias( { entries: [ { find: "coreComponents", replacement: $.CORE_COMPONENTS_PATH } ] } ),
-        nodeResolve( { moduleDirectories: [ "node_modules", "assets/js" ] } ),
+        nodeResolve( { modulePaths: [ "node_modules", "assets/js" ] } ),
         commonjs(),
         json(),
         babel( configBabel( { legacy: true } ) ),
@@ -146,8 +144,7 @@ const moduleConfig = {
     },
     plugins: [
         virtual( { "virtual-entry": $.VIRTUAL_ENTRY } ),
-        alias( { entries: [ { find: "coreComponents", replacement: $.CORE_COMPONENTS_PATH } ] } ),
-        nodeResolve( { moduleDirectories: [ "node_modules", "assets/js" ] } ),
+        nodeResolve( { modulePaths: [ "node_modules", "assets.js" ] } ),
         commonjs(), //transforme des export commonJS (: "export(..)") en export ES6
         json(), //permet de faire des import de JSON dans des modules.
         $.MODE_PROD && babel( configBabel() ), // transpilation
