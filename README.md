@@ -46,7 +46,7 @@ The entry point of your files fed to Rollup should be a `index.json`, having thi
 }
 ```
 
-A quick dumb example of an output given the aformentionned `index.js`:
+A quick example of an output `graph.json` given the aformentionned `index.js`:
 ```json
 [
   "module_1.js": {
