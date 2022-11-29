@@ -135,8 +135,9 @@ Some naïve pseudo-js to illustrate what can be done with the graph server-side:
     LINKS = DEPENDENCIES_IN_PAGE.map( dependency => `<link rel="modulepreload" href="${dependency}"/>` );
     SCRIPTS = MODULES_IN_PAGE.map( entry => `<script type="module" src="${entry.moduleFile}"></script>` );
 
-    if (  )
-    JSON_DYNAMIC_MODULES = `<script type="app/json" id="esm-load-map">${JSON.stringify( DYNAMIC_MODULES )}</script>`;
+    if ( Object.keys(DYNAMIC_MODULES).length ) {
+      JSON_DYNAMIC_MODULES = `<script type="app/json" id="esm-load-map">${JSON.stringify( DYNAMIC_MODULES )}</script>`;
+    }
 
     html = htmlInsertInHead( LINKS + SCRIPTS + JSON_DYNAMIC_MODULES );
     res.send( html );
