@@ -1,6 +1,6 @@
 {
     "modules": {
-      "esm-dynamic-loader.js": {},
+      "esm-loader.js": {},
       "example--input-select.js": {"loadingPoint": "onFocusIn"},
       "example--nav.js": {"loadingPoint": "onClick"}
     },

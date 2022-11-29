@@ -1,7 +1,7 @@
 import * as pubsub from "./utils/pubsub";
 import { unBracket } from "./utils/unbracket";
 
-const loadingMap = JSON.parse( document.getElementById( "esm-loading-map" ).textContent );
+const loadingMap = JSON.parse( document.getElementById( "esm-load-map" ).textContent );
 let onClickSelectors = loadingMap.onClick && Object.keys( loadingMap.onClick );
 let onFocusInSelectors = loadingMap.onFocusIn && Object.keys( loadingMap.onFocusIn );
 let onIntersectSelectors = loadingMap.onIntersection && Object.keys( loadingMap.onIntersection );

@@ -22,7 +22,7 @@ All sorts of event are very well suited for this kind of logic, any event that c
 ## how does it work?
 This repo consists of:
 - a Rollup config that analyses js files and builds a graph as a JSON to map modules to their dependencies (as well as other optional stuff)
-- a module `esm-loading.js` whose purpose is to dynamically load modules following the logic previously mentionned.
+- a module `esm-loader.js` whose purpose is to dynamically load modules following the logic previously mentionned.
 
 Rollup is used with a specific config to build files and do the "Rollup things" like tree-shaking, minifying, etc.
 Added to the final ouput, Rollup API is used to create a `graph.json` that will contain key information about each module you wish to load on the browser.
@@ -70,14 +70,85 @@ The resulting graph can be used server-side to add `<script type="module">` (for
 This way, only the strict necessary JS is loaded on a page, something that is impossible with a classic bundle.js.
 
 But most importantly, the key "loadingPoint" can be used to specify if a module is to be loaded dynamically, lowering the amount of js loading, parsing & execution on page load even more!
-  
+
 ## about dynamic loading
 A simple dynamic import (`import(...)`) is used.
-  
+
 Here is a list of events and DOM APIs that are used to dynamically load a module:
 - `click`
 - `focusin` useful for elements like <input>, <form>, etc
 - `IntersectionObserver` load a module when related Element is in viewport
-  
-The `MutationObserver` API could have been used to dynamically load a module when a specific HTML is injected in the page, but this requires to observe all nodes and their descendants (subtree: true) on a page, which can be costly performance-wise. Instead, it is better to use a publish/subscribe system to notify the module `esm-loading.js` that HTML has been injected, the module will simply search for any selector in the injected String and load the corresponding module if a match is found.
+
+The `MutationObserver` API could have been used to dynamically load a module when a specific HTML is injected in the page, but this requires to observe all nodes and their descendants (subtree: true) on a page, which can be costly performance-wise. Instead, it is better to use a publish/subscribe system to notify the module `esm-loader.js` that HTML has been injected, the module will simply search for any selector in the injected String and load the corresponding module if a match is found.
 It's up to you tu create the publish/subscribe system, although for the sake of the example, a file `pubsub.js` is located in this repo.
+
+# how to use
+Don't forget to run `yarn` to install the project dependencies.
+To see the final output when executing the config, run `yarn prod` (will babelify, minify the code as well as creating a bundle for legacy browsers);
+or run `yarn dev` (enables watch mode, disable minification which by the way elminates the need to create source-maps).
+
+You will see in *dist/dev|prod/js* the created files, along the most important one: `graph.json`.
+This file contains all the important informations about each module, and can then be used server-side to render a page.
+
+Some naïve pseudo-js to illustrate what can be done with the graph server-side:
+```javascript
+    GRAPH = parse(graph.json);
+    MODULES_IN_PAGE = [];
+    DYNAMIC_MODULES = {};
+    JSON_DYNAMIC_MODULES = "";
+
+    GRAPH.forEach( entry => {
+        if ( entry.loadingPoint === "onInjection" ) {
+
+          DYNAMIC_MODULES.onInjection = Object.assign(
+            DYNAMIC_MODULES.onInjection ?? {},
+            { [entry.selectorInit]: entry.moduleFile }
+          );
+          return;
+        }
+
+        if ( selectorIsInHTML( entry.selectorInit ) ) {
+          if ( entry.loadingPoint !== "static" ) {
+
+            DYNAMIC_MODULES[ entry.loadingPoint ] = Object.assign(
+              DYNAMIC_MODULES[ entry.loadingPoint ] ?? {},
+              { [ entry.selectorInit ]: entry.moduleFile }
+            );
+
+          } else {
+            MODULES_IN_PAGE.push(entry);
+          }
+        }
+    } );
+
+    DEPENDENCIES_IN_PAGE = MODULES_IN_PAGE.flatMap( entry => entry["helperFiles"] );
+    DEPENDENCIES_IN_PAGE = [...new Set(DEPENDENCIES_IN_PAGE)];// deduplication of helper files
+
+    LINKS = DEPENDENCIES_IN_PAGE.map( dependency => `<link rel="modulepreload" href="${dependency}"/>` );
+    SCRIPTS = MODULES_IN_PAGE.map( entry => `<script type="module" src="${entry.moduleFile}"></script>` );
+
+    if (  )
+    JSON_DYNAMIC_MODULES = `<script type="app/json" id="esm-load-map">${JSON.stringify( DYNAMIC_MODULES )}</script>`;
+
+    html = htmlInsertInHead( LINKS + SCRIPTS + JSON_DYNAMIC_MODULES );
+    res.send( html );
+```
+The `<links rel="modulepreload">` are the flattened list of the dependencies used by the main modules. If HTTP/2 is enbled on your server, this can provide a great boost at load time.
+
+The `JSON_DYNAMIC_MODULES` can be parsed at runtime by the script `esm-dynamic-loader.js`. It will load scripts on demand depending on user interaction (you can see the list of triggering interactions below - but feel free to add your own!).
+
+All in all, the minimum amount of JS will be downloaded by the browser!
+
+If you wish you can add an entry to the **"modules"** object in *assets/js/index.json*.
+A valid entry is key (value = path of your module relative to assets/js) and a associated value (value = object of `options`).
+For details about the object of `options` paired with the module's path, see below.
+
+## about options
+Here are the options you can use to fine-grain the final output of the es-modules:
+- `loadingPoint`: default to `static`, otherwise can be:
+    - `onClick`
+    - `onFocusIn`
+    - `onIntersection`
+    - `onInjection` (warning: my own pubsub implementation is used in lieu of a mutationObserver for better performances, but feel free to change the logic!)
+- `priority`: will add fetchpriority hints on `<link>` and `<script>`, but more importantly can be used to fine-grain in which order modules are loaded, thus having a predictive order of modules execution:
+    - `very-high`, `high`, `low`
