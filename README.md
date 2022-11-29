@@ -9,7 +9,7 @@ This repo demonstrates how to efficiently load JS files on a website using a two
 
 ES-Modules are available in all modern browsers, this opens up new possibilities regarding Javascript loading.
 Instead of creating a bundle that concatenates all JS files, with ES-Modules it's possible to just load files individually, bringing advantages like:
-> - faster loading of your JS if coupled with HTTP/2
+> - faster cold load of your JS if coupled with HTTP/2
 > - lower TTI (*Time To Interactive*)
 > - lower TBT (*Total Blocking Time*)
 > - if a module has changed, no need to reload a whole bundle
