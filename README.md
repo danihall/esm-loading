@@ -33,7 +33,7 @@ Added to the final ouput, Rollup API is used to create a `graph.json` that will 
 > - compare the HTML and the selectors listed in the graph to add the corresponding scripts and links.
 > - build a new JSON that lists the modules to be loaded dynamically.
 
-The entry point of your files fed to Rollup should be a `index.json`, having this shape:
+The entry point of your files fed to Rollup should be a `index.json` *(assets/js/index.json)*, having this shape:
 ```json
 {
   "modules": {
