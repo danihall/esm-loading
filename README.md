@@ -108,17 +108,17 @@ Some naïve pseudo-js to illustrate what can be done with the graph server-side:
 
           DYNAMIC_MODULES.onInjection = Object.assign(
             DYNAMIC_MODULES.onInjection ?? {},
-            { [entry.selectorInit]: entry.moduleFile }
+            { [entry.selector]: entry.moduleFile }
           );
           return;
         }
 
-        if ( selectorIsInHTML( entry.selectorInit ) ) {
+        if ( selectorIsInHTML( entry.selector ) ) {
           if ( entry.loadingPoint !== "static" ) {
 
             DYNAMIC_MODULES[ entry.loadingPoint ] = Object.assign(
               DYNAMIC_MODULES[ entry.loadingPoint ] ?? {},
-              { [ entry.selectorInit ]: entry.moduleFile }
+              { [ entry.selector ]: entry.moduleFile }
             );
 
           } else {

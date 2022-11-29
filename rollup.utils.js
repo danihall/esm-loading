@@ -17,7 +17,7 @@ const MODULES = Object.fromEntries( Object.entries( modules ).map( getModuleAbso
 const VIRTUAL_ENTRY = Object.keys( MODULES ).map( writeImport ).join( "" );
 const VIRTUAL_LEGACY_ENTRY = domPolyfills.map( writeImport ).join( "" ) + VIRTUAL_ENTRY.replace( /import[^;]*esm-dynamic-loader[^;]*;/, "" );
 
-const SELECTOR_INIT_REGEX = /(?:selectorInit)(?:"|\s|=)*([^"]*)/;
+const SELECTOR_REGEX = /(?:selector)(?:"|\s|=)*([^"]*)/;
 
 const MODULES_GRAPH = [];
 
@@ -97,7 +97,7 @@ export {
     MODULES,
     VIRTUAL_ENTRY,
     VIRTUAL_LEGACY_ENTRY,
-    SELECTOR_INIT_REGEX,
+    SELECTOR_REGEX,
     MODULES_GRAPH,
     sortGraphByPriority,
     splitChunks

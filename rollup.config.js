@@ -76,7 +76,7 @@ const createDependencyGraph = async function( outputFile ) {
 
     const [ module, ...helpers ] = individualBundle.output;
     const individualGraph = {
-        selectorInit: module.code.match( $.SELECTOR_INIT_REGEX )?.[ 1 ] || false,
+        selector: module.code.match( $.SELECTOR_REGEX )?.[ 1 ] || false,
         moduleFile: module.fileName,
         helperFiles: helpers.map( helper => helper.fileName ),
         priority: $.MODULES[ sourceFile ].priority ?? "low",
@@ -85,8 +85,8 @@ const createDependencyGraph = async function( outputFile ) {
 
     individualEntry.close();
 
-    if ( !individualGraph.selectorInit && individualGraph.loadingPoint !== "static" ) {
-        return Promise.reject( `\x1b[1m\x1b[43m >\x1b[1m\x1b[41m \x1b[4m"${individualGraph.moduleFile}"\x1b[0m\x1b[1m\x1b[41m is dynamically loaded {loadingPoint: ${individualGraph.loadingPoint}}.\n\x1b[1m\x1b[43m     >\x1b[1m\x1b[41m No "selectorInit" was found in code to link the module to an HTML Element! \n\n` );
+    if ( !individualGraph.selector && individualGraph.loadingPoint !== "static" ) {
+        return Promise.reject( `\x1b[1m\x1b[43m >\x1b[1m\x1b[41m \x1b[4m"${individualGraph.moduleFile}"\x1b[0m\x1b[1m\x1b[41m is dynamically loaded {loadingPoint: ${individualGraph.loadingPoint}}.\n\x1b[1m\x1b[43m     >\x1b[1m\x1b[41m No "selector" was found in code to link the module to an HTML Element! \n\n` );
     }
 
     $.MODULES_GRAPH.push( individualGraph );
