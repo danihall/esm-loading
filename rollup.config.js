@@ -1,4 +1,4 @@
-import * as $ from "./rollup.constants.js";
+import * as $ from "./rollup.utils.js";
 import { rollup } from "rollup";
 import { terser } from "rollup-plugin-terser";
 import { minify } from "terser";

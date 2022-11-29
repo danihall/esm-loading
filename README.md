@@ -21,11 +21,17 @@ All sorts of event are very well suited for this kind of logic, any event that c
 
 ## how does it work?
 This repo consists of:
-- a Rollup config that analyses js files and builds a graph as a JSON to map modules to their dependencies (as well as other optional stuff)
-- a module `esm-loader.js` whose purpose is to dynamically load modules following the logic previously mentionned.
+- a Rollup config (`rollup.config.js` and `rollup.utils.js`) that analyses js files and builds a graph as a JSON to map modules to their dependencies (as well as other optional stuff)
+- a module `esm-loader.js` *(assets/js/esm-loader.js)* whose purpose is to dynamically load modules following the logic previously mentionned.
+
+> These 3 files are at the core of my esm loading strategy, feel free to inspect them.
 
 Rollup is used with a specific config to build files and do the "Rollup things" like tree-shaking, minifying, etc.
 Added to the final ouput, Rollup API is used to create a `graph.json` that will contain key information about each module you wish to load on the browser.
+
+> This file *graph.json* is what the Rollup config is used for, its purpose is to be used Server Side to:
+> - compare the HTML and the selectors listed in the graph to add the corresponding scripts and links.
+> - build a new JSON that lists the modules to be loaded dynamically.
 
 The entry point of your files fed to Rollup should be a `index.json`, having this shape:
 ```json
@@ -76,7 +82,7 @@ A simple dynamic import (`import(...)`) is used.
 
 Here is a list of events and DOM APIs that are used to dynamically load a module:
 - `click`
-- `focusin` useful for elements like <input>, <form>, etc
+- `focusin` useful for elements like `<input>`, `<form>`, etc
 - `IntersectionObserver` load a module when related Element is in viewport
 
 The `MutationObserver` API could have been used to dynamically load a module when a specific HTML is injected in the page, but this requires to observe all nodes and their descendants (subtree: true) on a page, which can be costly performance-wise. Instead, it is better to use a publish/subscribe system to notify the module `esm-loader.js` that HTML has been injected, the module will simply search for any selector in the injected String and load the corresponding module if a match is found.
