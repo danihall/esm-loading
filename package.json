@@ -12,6 +12,7 @@
     "prod": "rm -rf dist/prod/js && rollup --environment NODE_ENV:prod --config"
   },
   "devDependencies": {
+    "@babel/cli": "^7.19.3",
     "@babel/core": "^7.20.5",
     "@babel/preset-env": "^7.20.2",
     "@rollup/plugin-babel": "^6.0.3",
@@ -26,5 +27,8 @@
     "rollup-plugin-terser": "^7.0.2",
     "terser": "^5.16.0",
     "whatwg-fetch": "^3.6.2"
+  },
+  "dependencies": {
+    "core-js": "^3.26.1"
   }
 }
