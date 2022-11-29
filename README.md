@@ -71,7 +71,6 @@ A quick example of an output `graph.json` given the aformentionned `index.js`:
 ]
 ```
 
-
 The resulting graph can be used server-side to add `<script type="module">` (for main modules) and `<link rel="modulepreload">` (for their dependencies) to a page.
 
 This way, only the strict necessary JS is loaded on a page, something that is impossible with a classic bundle.js.
@@ -79,12 +78,14 @@ This way, only the strict necessary JS is loaded on a page, something that is im
 But most importantly, the key "loadingPoint" can be used to specify if a module is to be loaded dynamically, lowering the amount of js loading, parsing & execution on page load even more!
 
 ## about dynamic loading
-A simple dynamic import (`import(...)`) is used.
+For `Events`, the script `esm-loader.js` just checks if an event is detected on an element linked to an es-module, if that is the case, a simple dynamic import (`import(...)`) is used.
+There is a special case for `click` event as the `esm-loader.js` will dispatch a custom `click Event` after the module.s is.are dynamically loaded.
+Which can be useful if your module acts on a click event like, well, a lot of modules we write actually.
 
 Here is a list of events and DOM APIs that are used to dynamically load a module:
 - `click`
-- `focusin` useful for elements like `<input>`, `<form>`, etc
-- `IntersectionObserver` load a module when related Element is in viewport
+- `focusin`: useful for elements like `<input>`, `<form>`, etc
+- `IntersectionObserver`: load a module when related Element is in viewport
 
 The `MutationObserver` API could have been used to dynamically load a module when a specific HTML is injected in the page, but this requires to observe all nodes and their descendants (subtree: true) on a page, which can be costly performance-wise. Instead, it is better to use a publish/subscribe system to notify the module `esm-loader.js` that HTML has been injected, the module will simply search for any selector in the injected String and load the corresponding module if a match is found.
 It's up to you tu create the publish/subscribe system, although for the sake of the example, a file `pubsub.js` is located in this repo.
@@ -150,7 +151,7 @@ If you wish you can add an entry to the **"modules"** object in *assets/js/index
 A valid entry is key (value = path of your module relative to assets/js) and a associated value (value = object of `options`).
 For details about the object of `options` paired with the module's path, see below.
 
-## of but how do I really test this?
+## about testing
 As there is some server-side logic to be written, this is up to you.
 It's important that you test this with HTTP/2 enabled to see the real gain of this strategy.
 
@@ -165,7 +166,7 @@ Here are the options you can use to fine-grain the final output of the es-module
     - `very-high`, `high`, `low`
 
 ## about selectors
-As explained above, a es-module must have a selector for it to be found in a HTML.
+As explained above, an es-module must have a selector for it to be found in a HTML.
 > This means, in the code of your module, you must have a variable named "selector" that holds the CSS selector of the HTMLElement linked to your module.
 For example in this repo, the file `example--nav.js` contains:
 ```javascript
@@ -183,7 +184,7 @@ And that'll be okay since the `graph.json` created at build-time is all you need
 
 ## to conclude
 With ES-Modules now supported in pretty much all browsers, it is possible to push the boundaries of what's possible to optimize at runtime for loading performances.
-As the spec evolve and browser fine-tune their implementations, I predict that pushing those boundaries will barely require any bundler regarding the JS we write.
+As the spec evolve and browser fine-tune their implementations, I predict that pushing those boundaries will in the not-so-distant-future barely require any bundler regarding the JS we write.
 
 If you tested this repo, found a bug or just want some information, you can contact me at [danielhalle82@gmail](mailto:danielhalle82@gmail.com)
 

@@ -1,6 +1,11 @@
 import * as pubsub from "./utils/pubsub";
 import { unBracket } from "./utils/unbracket";
 
+/**
+ * @note if no "esm-load-map" is found, an error will be thrown.
+ * But you can know server-side if there any modules to load dynamically,
+ * and add | remove this module from the <scripts> in the page
+ */
 const loadingMap = JSON.parse( document.getElementById( "esm-load-map" ).textContent );
 let onClickSelectors = loadingMap.onClick && Object.keys( loadingMap.onClick );
 let onFocusInSelectors = loadingMap.onFocusIn && Object.keys( loadingMap.onFocusIn );
