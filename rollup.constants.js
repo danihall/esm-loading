@@ -1,5 +1,3 @@
-//import { modules, domPolyfills } from "./assets/js/index.json";
-//import { devDependencies } from "./package.json";
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
@@ -15,13 +13,13 @@ const replacer = ( match ) => `${JS_PATH}/${match}`;
 const getModuleAbsolutePath = ( [ file, options ] ) => [ file.replace( /.*/, replacer ), options ];
 const writeImport = ( file ) => `import "${file}";`;
 
-const MODULES = Object.fromEntries( Object.entries( modules ).map( getModuleAbsolutePath ) );//clone de modules.json mais avec des chemins absolus.
-const VIRTUAL_ENTRY = Object.keys( MODULES ).map( writeImport ).join( "" );// tableau d'imports à faire analyser par Rollup.
-const VIRTUAL_LEGACY_ENTRY = domPolyfills.map( writeImport ).join( "" ) + VIRTUAL_ENTRY.replace( /import[^;]*esm-dynamic-loader[^;]*;/, "" );// supprime l'entrée esm-loader
+const MODULES = Object.fromEntries( Object.entries( modules ).map( getModuleAbsolutePath ) );
+const VIRTUAL_ENTRY = Object.keys( MODULES ).map( writeImport ).join( "" );
+const VIRTUAL_LEGACY_ENTRY = domPolyfills.map( writeImport ).join( "" ) + VIRTUAL_ENTRY.replace( /import[^;]*esm-dynamic-loader[^;]*;/, "" );
 
 const SELECTOR_INIT_REGEX = /(?:selectorInit)(?:"|\s|=)*([^"]*)/;
 
-const MODULES_GRAPH = [];// Contiendra les arbres de dépendances "composant -> helpers" pour chaque module.
+const MODULES_GRAPH = [];
 
 const getModuleByPriority = function( module ) {
     return module.priority === this;
@@ -35,15 +33,15 @@ const sortGraphByPriority = ( graph ) => [
 const getFileName = ( path ) => path.split( ".js" )[ 0 ].split( "/" ).pop();
 const splitChunks = ( id ) => {
     if ( id.includes( "virtual-entry" ) ) {
-        return id;// Nécessaire de découper ces chunks à part pour éviter des dépendances circulaires.
+        return id;// isolate this chunk to avoid circular dependencies.
     }
     if ( id.includes( JS_PATH ) ) {
-        return getFileName( id );// chunks des JS maison.
+        return getFileName( id );// your homemade JS chunks
     }
     if ( id.includes( "node_modules" ) && !id.includes( "core-js" ) ) {
-        return `vendors-${getFileName( id )}`;// chunks de librairies tierces qui ne sont pas des polyfills de Babel.
+        return `vendors-${getFileName( id )}`;// chunks of third-party libs
     }
-    return "babel-polyfills";// chunks des polyfills ajoutés par Babel.
+    return "babel-polyfills";// chunks of poyfills added by Babel
 };
 
 {

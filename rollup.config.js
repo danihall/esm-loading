@@ -1,7 +1,7 @@
-//@TODO: split babel-polyfills into separate chunks ( seems very complex so it can wait ).
-import * as $ from "./rollup.constants.js";// Chemins absolut et helpers.
+import * as $ from "./rollup.constants.js";
 import { rollup } from "rollup";
 import { terser } from "rollup-plugin-terser";
+import { minify } from "terser";
 import virtual from "@rollup/plugin-virtual";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
@@ -11,10 +11,6 @@ import path from "node:path";
 import fs from "node:fs";
 import process from "node:process";
 
-/**
- * @see https://github.com/rollup/plugins/tree/master/packages/babel
- * @see https://babeljs.io/docs/en/babel-preset-env
- */
 const configBabel = ( { legacy = false } = {} ) => ( {
     exclude: [ /node_modules/ ],
     babelHelpers: "bundled",
@@ -22,7 +18,7 @@ const configBabel = ( { legacy = false } = {} ) => ( {
         exclude: legacy ? [] : [ "es.array.includes", "es.string.includes" ],
         targets: { browsers: legacy ?
             [ "ie 11" ] :
-            [ "last 4 Chrome versions", "last 4 Safari versions", "last 4 iOS versions", "last 4 Edge versions", "Firefox ESR" ]// À voir si c'est pas quand même préférable pour les browsers modernes de targeter "{esmodules: true}" (même si ça génère plus de polyfills).
+            [ "last 4 Chrome versions", "last 4 Safari versions", "last 4 iOS versions", "last 4 Edge versions", "Firefox ESR" ]
         },
         useBuiltIns: "usage",
         modules: legacy ? "auto" : false,
@@ -33,21 +29,12 @@ const configBabel = ( { legacy = false } = {} ) => ( {
     } ] ]
 } );
 
-/**
- * Supprime des fichiers inutiles générés par le plugin "rollup-virtual".
- * @see https://rollupjs.org/guide/en/#generatebundle
- */
 const beforeFilesWrite = () => ( {
     generateBundle( _outputOptions, bundle ) {
         Object.keys( bundle ).forEach( module => module.includes( "virtual-entry" ) && delete bundle[ module ] );
     }
 } );
 
-/**
- * Une fois que Rollup à écrit sur le disque les fichiers de sortie,
- * on utilise les infos sur le bundle pour créer un JSON mappant les dépendances composant -> helper.
- * @see https://rollupjs.org/guide/en/#writebundle
- */
 const afterFilesWrite = () => ( {
     writeBundle( _outputOptions, bundle ) {
         const t1 = performance.now();
@@ -74,9 +61,6 @@ const removeDeprecatedFiles = function( oldFile ) {
 };
 
 /**
- * Relance le processus d'analyse sur chaque fichier de sortie d'un composant (ex: sidebar-431c499f.js),
- * afin d'obtenir une liste de toutes les dépendances utilisé par ce composant (y-compris des sous-dépendances insoupçonnées).
- * @see https://rollupjs.org/guide/en/#javascript-api
  * @this {Object} bundle
  */
 const createDependencyGraph = async function( outputFile ) {
@@ -97,6 +81,7 @@ const createDependencyGraph = async function( outputFile ) {
         loadingPoint: $.MODULES[ sourceFile ].loadingPoint ?? "static"
     };
 
+
     individualEntry.close();
 
     if ( !individualGraph.selectorInit && individualGraph.loadingPoint !== "static" ) {
@@ -107,7 +92,7 @@ const createDependencyGraph = async function( outputFile ) {
 };
 
 /**
- * Config no-modules pour générer un bundle pour les navigateurs legacy (= IE 11).
+ * config for legacy browsers
  */
 const noModuleConfig = {
     input: "virtual-legacy-entry",
@@ -116,7 +101,7 @@ const noModuleConfig = {
         entryFileNames: "bundle-nomodule-[hash].js",
         format: "iife"
     },
-    watch: false, // Pas besoin de générer ce bundle en mode dev (@see package.json -> "scripts" -> "dev").
+    watch: false,
     plugins: [
         virtual( { "virtual-legacy-entry": $.VIRTUAL_LEGACY_ENTRY } ),
         nodeResolve( { modulePaths: [ "node_modules", "assets/js" ] } ),
@@ -128,14 +113,13 @@ const noModuleConfig = {
 };
 
 /**
- * Config appliquée pour les browser supportant les ES Modules.
- * @see https://rollupjs.org/guide/en/#big-list-of-options
+ * config for browser that support es-modules
  */
 const moduleConfig = {
     input: "virtual-entry",
     output: {
         dir: $.DIST_PATH,
-        hoistTransitiveImports: false, // Empêche de hoister des dépendances de dépendances sur le fichier d'entrée lorsque Rollup transforme les fichiers.
+        hoistTransitiveImports: false,
         manualChunks: $.splitChunks
     },
     watch: {
@@ -145,12 +129,13 @@ const moduleConfig = {
     plugins: [
         virtual( { "virtual-entry": $.VIRTUAL_ENTRY } ),
         nodeResolve( { modulePaths: [ "node_modules", "assets.js" ] } ),
-        commonjs(), //transforme des export commonJS (: "export(..)") en export ES6
-        json(), //permet de faire des import de JSON dans des modules.
-        $.MODE_PROD && babel( configBabel() ), // transpilation
-        beforeFilesWrite(), // hook dans lequel on supprime des fichiers inutiles générés par le plugin "@rollup/plugin-virtual".
-        afterFilesWrite(), // hook dans lequel on crée un JSON représentant les dépendances des composants.
-        $.MODE_PROD && terser() // uglifie + minifie output final.
+        commonjs(),
+        json(),
+        $.MODE_PROD && babel( configBabel() ),
+        beforeFilesWrite(),
+        afterFilesWrite()
+
+        //$.MODE_PROD && terser() // uglifie + minifie output final.
     ]
 };
 
