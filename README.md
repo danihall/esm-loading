@@ -1,6 +1,7 @@
 # esm-loading
 Configuration for efficient ES modules loading
 
+Nodejs >= 16.12.0 required.
 ## what's this for ?
 This repo demonstrates how to efficiently load JS files on a website.
 
@@ -149,6 +150,10 @@ If you wish you can add an entry to the **"modules"** object in *assets/js/index
 A valid entry is key (value = path of your module relative to assets/js) and a associated value (value = object of `options`).
 For details about the object of `options` paired with the module's path, see below.
 
+## of but how do I really test this?
+As there is some server-side logic to be written, this is up to you.
+It's important that you test this with HTTP/2 enabled to see the real gain of this strategy.
+
 ## about options
 Here are the options you can use to fine-grain the final output of the es-modules:
 - `loadingPoint`: default to `static`, otherwise can be:
@@ -158,3 +163,27 @@ Here are the options you can use to fine-grain the final output of the es-module
     - `onInjection` (warning: my own pubsub implementation is used in lieu of a mutationObserver for better performances, but feel free to change the logic!)
 - `priority`: will add fetchpriority hints on `<link>` and `<script>`, but more importantly can be used to fine-grain in which order modules are loaded, thus having a predictive order of modules execution:
     - `very-high`, `high`, `low`
+
+## about selectors
+As explained above, a es-module must have a selector for it to be found in a HTML.
+> This means, in the code of your module, you must have a variable named "selector" that holds the CSS selector of the HTMLElement linked to your module.
+For example in this repo, the file `example--nav.js` contains:
+```javascript
+const selector = "#nav";
+const nav = document.querySelector( selector );
+nav.addEventListener( "click", _onClick );
+```
+Notice how `selector` is simple variable assigment, not a property of a object literal.
+It is important to have in the code some kind of *"needle in a haystack"* to search for, it might make the code more verbose but in the end, when minified, the code will look like this:
+```javascript
+const n = document.querySelector( "#nav" );
+n.addEventListener( "click", c );
+```
+And that'll be okay since the `graph.json` created at build-time is all you need to properly load the modules.
+
+## to conclude
+With ES-Modules now supported in pretty much all browsers, it is possible to push the boundaries of what's possible to optimize at runtime for loading performances.
+As the spec evolve and browser fine-tune their implementations, I predict that pushing those boundaries will barely require any bundler regarding the JS we write.
+
+If you tested this repo, found a bug or just want some information, you can contact me at [danielhalle82@gmail](mailto:danielhalle82@gmail.com)
+
