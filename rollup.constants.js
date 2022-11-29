@@ -54,7 +54,7 @@ const splitChunks = ( id ) => {
         fileExtension: /.js|.mjs/,
         optionName: /priority|loadingPoint/,
         priority: /low|high|very-high/,
-        loadingPoint: /static|onClick|onFocusIn|onIntersection|onInjection|onComplete/
+        loadingPoint: /static|onClick|onFocusIn|onIntersection|onInjection/
     };
     const getInvalidOptions = ( options ) => Object.entries( options )
         .map( ( [ name, value ] ) => [
