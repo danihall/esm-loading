@@ -171,12 +171,12 @@ Here are the options you can use to fine-grain the final output of the es-module
 ## about selectors
 As explained above, an es-module must have a selector for it to be found in a HTML.
 > This means, in the code of your module, you must have a variable named "selector" that holds the CSS selector of the HTMLElement linked to your module.
-For example in this repo, the file `example--nav.js` contains:
-```javascript
-const selector = "#nav";
-const nav = document.querySelector( selector );
-nav.addEventListener( "click", _onClick );
-```
+> For example in this repo, the file `example--nav.js` contains:
+> ```javascript
+> const selector = "#nav";
+> const nav = document.querySelector( selector );
+> nav.addEventListener( "click", _onClick );
+> ```
 Notice how `selector` is simple variable assigment, not a property of a object literal.
 It is important to have in the code some kind of *"needle in a haystack"* to search for, it might make the code more verbose but in the end, when minified, the code will look like this:
 ```javascript
