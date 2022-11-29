@@ -37,7 +37,6 @@ const beforeFilesWrite = () => ( {
 
 const afterFilesWrite = () => ( {
     writeBundle( _outputOptions, bundle ) {
-        const t1 = performance.now();
         const oldFiles = fs.readdirSync( $.DIST_PATH );
         const newFiles = Object.keys( bundle );
 
@@ -46,7 +45,7 @@ const afterFilesWrite = () => ( {
             ...newFiles.map( createDependencyGraph, { bundle } )
         ] )
         .then( () => fs.promises.writeFile( `${$.DIST_PATH}/graph.json`, JSON.stringify( $.sortGraphByPriority( $.MODULES_GRAPH ) ) ) )
-        .then( () => console.log( `\x1b[42mcreated graph.json in ${Math.round( performance.now() - t1 )}ms\x1b[0m` ) )
+        .then( () => $.MODE_PROD && Promise.all( newFiles.map( minifyEsModule, { bundle } ) ) )
         .catch( ( reason ) => void( console.log( `\x1b[1m\x1b[41m\n\n\n ERROR ! CANNOT CREATE DEPENDENCIES GRAPH:\n\n\n${reason} \x1b[0m` ), process.exit( 1 ) ) )
         .finally( () => $.MODULES_GRAPH.length = 0 );
     }
@@ -61,15 +60,18 @@ const removeDeprecatedFiles = function( oldFile ) {
 };
 
 /**
+ * @param {String} outputFile
  * @this {Object} bundle
  */
 const createDependencyGraph = async function( outputFile ) {
     const [ sourceFile ] = Object.keys( this.bundle[ outputFile ].modules );
+
     if ( !( sourceFile in $.MODULES ) ) {
         return;
     }
 
-    const individualEntry = await rollup( { input: path.resolve( $.DIST_PATH, outputFile ) } );
+    const outputFilePath = path.resolve( $.DIST_PATH, outputFile );
+    const individualEntry = await rollup( { input: outputFilePath } );
     const individualBundle = await individualEntry.generate( { preserveModules: true } );
 
     const [ module, ...helpers ] = individualBundle.output;
@@ -81,7 +83,6 @@ const createDependencyGraph = async function( outputFile ) {
         loadingPoint: $.MODULES[ sourceFile ].loadingPoint ?? "static"
     };
 
-
     individualEntry.close();
 
     if ( !individualGraph.selectorInit && individualGraph.loadingPoint !== "static" ) {
@@ -89,6 +90,18 @@ const createDependencyGraph = async function( outputFile ) {
     }
 
     $.MODULES_GRAPH.push( individualGraph );
+};
+
+/**
+ * @param {String} file
+ * @this {Object} bundle
+ */
+const minifyEsModule = async function( file ) {
+    const fileCode = this.bundle[ file ].code;
+    const outputFilePath = path.resolve( $.DIST_PATH, file );
+
+    const minified = await minify( fileCode, { module: true } );
+    await fs.promises.writeFile( outputFilePath, minified.code );
 };
 
 /**
