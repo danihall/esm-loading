@@ -177,7 +177,7 @@ As explained above, an es-module must have a selector for it to be found in a HT
 > const nav = document.querySelector( selector );
 > nav.addEventListener( "click", _onClick );
 > ```
-Notice how `selector` is simple variable assigment, not a property of a object literal.
+Notice how `selector` is a simple variable assigment, not a property of an object literal.
 It is important to have in the code some kind of *"needle in a haystack"* to search for, it might make the code more verbose but in the end, when minified, the code will look like this:
 ```javascript
 const n = document.querySelector( "#nav" );
