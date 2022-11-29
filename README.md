@@ -3,7 +3,9 @@ Configuration for efficient ES modules loading
 
 Nodejs >= 16.12.0 required.
 ## what's this for ?
-This repo demonstrates how to efficiently load JS files on a website.
+This repo demonstrates how to efficiently load JS files on a website using a twofold strategy:
+- creating a graph at build time to list all es-modules and add only the necessary ones when requesting the server.
+- using native dynamic loading in JS to react to a user interaction.
 
 ES-Modules are available in all modern browsers, this opens up new possibilities regarding Javascript loading.
 Instead of creating a bundle that concatenates all JS files, with ES-Modules it's possible to just load files individually, bringing advantages like:
@@ -13,8 +15,8 @@ Instead of creating a bundle that concatenates all JS files, with ES-Modules it'
 - if a module has changed, no need to reload a whole bundle
 - when Import Maps (https://github.com/WICG/import-maps) are available, event less file reloading if a dependency has changed
 
-Those are just the plain-to-see advantages, but why not go further and dynamically load es-modules on user interaction?
-This way, only one (tiny) file is needed on page load, the rest is loaded individually on demand.
+**Those are just the plain-to-see advantages, but why not go further and dynamically load es-modules on user interaction?
+This way, only one (tiny) file is needed on page load, the rest is loaded individually on demand.**
 
 Since most of the time we write JS scripts that respond to a user interaction, we can load an es-module when a specific `Event` is registered on specific `HTMLElement`.
 
