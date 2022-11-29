@@ -78,7 +78,7 @@ const createDependencyGraph = async function( outputFile ) {
     const individualGraph = {
         selector: module.code.match( $.SELECTOR_REGEX )?.[ 1 ] || false,
         moduleFile: module.fileName,
-        helperFiles: helpers.map( helper => helper.fileName ),
+        dependencies: helpers.map( helper => helper.fileName ),
         priority: $.MODULES[ sourceFile ].priority ?? "low",
         loadingPoint: $.MODULES[ sourceFile ].loadingPoint ?? "static"
     };

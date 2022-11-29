@@ -127,7 +127,7 @@ Some naïve pseudo-js to illustrate what can be done with the graph server-side:
         }
     } );
 
-    DEPENDENCIES_IN_PAGE = MODULES_IN_PAGE.flatMap( entry => entry["helperFiles"] );
+    DEPENDENCIES_IN_PAGE = MODULES_IN_PAGE.flatMap( entry => entry.dependencies );
     DEPENDENCIES_IN_PAGE = [...new Set(DEPENDENCIES_IN_PAGE)];// deduplication of helper files
 
     LINKS = DEPENDENCIES_IN_PAGE.map( dependency => `<link rel="modulepreload" href="${dependency}"/>` );
