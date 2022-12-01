@@ -146,7 +146,7 @@ Some naïve pseudo-js to illustrate what can be done with the graph server-side:
 ```
 The `<links rel="modulepreload">` are the flattened list of the dependencies used by the main modules. If HTTP/2 is enbled on your server, this can provide a great boost at load time.
 
-The `JSON_DYNAMIC_MODULES` can be parsed at runtime by the script `esm-dynamic-loader.js`. It will load scripts on demand depending on user interaction (you can see the list of triggering interactions below - but feel free to add your own!).
+The `JSON_DYNAMIC_MODULES` can be parsed at runtime by the script `esm-loader.js`. It will load scripts on demand depending on user interaction (you can see the list of triggering interactions below - but feel free to add your own!).
 
 All in all, the minimum amount of JS will be downloaded by the browser!
 
