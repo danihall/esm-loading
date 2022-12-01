@@ -189,5 +189,5 @@ And that'll be okay since the `graph.json` created at build-time is all you need
 With ES-Modules now supported in pretty much all browsers, it is possible to push the boundaries of what can be optimized at runtime for loading performances.
 As the spec evolve and browser fine-tune their implementations, I predict that, in the not-so-distant-future, pushing those boundaries will barely require any bundler regarding the JS we write.
 
-If you tested this repo, found a bug or just want some information, you can contact me at [danielhalle82@gmail](mailto:danielhalle82@gmail.com)
+If you tested this repo, found a bug or just want some information, you can contact me at [danielhalle82@gmail.com](mailto:danielhalle82@gmail.com)
 
