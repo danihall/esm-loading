@@ -186,7 +186,7 @@ n.addEventListener( "click", c );
 And that'll be okay since the `graph.json` created at build-time is all you need to properly load the modules.
 
 ## to conclude
-With ES-Modules now supported in pretty much all browsers, it is possible to push the boundaries of what's possible to optimize at runtime for loading performances.
+With ES-Modules now supported in pretty much all browsers, it is possible to push the boundaries of what can be optimized at runtime for loading performances.
 As the spec evolve and browser fine-tune their implementations, I predict that pushing those boundaries will in the not-so-distant-future barely require any bundler regarding the JS we write.
 
 If you tested this repo, found a bug or just want some information, you can contact me at [danielhalle82@gmail](mailto:danielhalle82@gmail.com)
