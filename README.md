@@ -144,7 +144,7 @@ Some naïve pseudo-js to illustrate what can be done with the graph server-side:
     html = htmlInsertInHead( LINKS + SCRIPTS + JSON_DYNAMIC_MODULES );
     res.send( html );
 ```
-The `<links rel="modulepreload">` are the flattened list of the dependencies used by the main modules. If HTTP/2 is enbled on your server, this can provide a great boost at load time.
+The `<links rel="modulepreload">` are the flattened list of the dependencies used by the main modules. If HTTP/2 is enabled on your server, this can provide a great boost at load time.
 
 The `JSON_DYNAMIC_MODULES` can be parsed at runtime by the script `esm-loader.js`. It will load scripts on demand depending on user interaction (you can see the list of triggering interactions below - but feel free to add your own!).
 
@@ -185,9 +185,9 @@ n.addEventListener( "click", c );
 ```
 And that'll be okay since the `graph.json` created at build-time is all you need to properly load the modules.
 
-## to conclude
+# to conclude
 With ES-Modules now supported in pretty much all browsers, it is possible to push the boundaries of what can be optimized at runtime for loading performances.
-As the spec evolve and browser fine-tune their implementations, I predict that, in the not-so-distant-future, pushing those boundaries will barely require any bundler regarding the JS we write.
+As the spec evolve and browsers fine-tune their implementations, I predict that, in the not-so-distant-future, pushing those boundaries will barely require any bundler regarding the JS we write.
 
 If you tested this repo, found a bug or just want some information, you can contact me at [danielhalle82@gmail.com](mailto:danielhalle82@gmail.com)
 
