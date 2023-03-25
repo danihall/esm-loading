@@ -29,7 +29,7 @@ This repo consists of:
 
 > These 3 files are at the core of my esm loading strategy, feel free to inspect them.
 
-Rollup is used with a specific config to build files and do the "Rollup things" like tree-shaking, minifying, etc.
+Rollup is used with a specific config to build files and do the usual "Rollup things" like tree-shaking, minifying, etc.
 Added to the final ouput, Rollup API is used to create a `graph.json` that will contain key information about each module you wish to load on the browser.
 
 > This file *graph.json* is what the Rollup config is used for, its purpose is to be used Server Side to:
