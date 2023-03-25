@@ -13,7 +13,7 @@ Instead of creating a bundle that concatenates all JS files, with ES-Modules it'
 > - lower TTI (*Time To Interactive*)
 > - lower TBT (*Total Blocking Time*)
 > - if a module has changed, no need to reload a whole bundle
-> - when Import Maps (https://github.com/WICG/import-maps) are available, event less file reloading if a dependency has changed
+> - when Import Maps (https://github.com/WICG/import-maps) are available, even less file reloading if a dependency has changed
 
 **Those are just the plain-to-see advantages, but why not go further and dynamically load es-modules on user interaction?
 This way, only one (tiny) file is needed on page load, the rest is loaded individually on demand.**
