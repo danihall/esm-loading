@@ -183,8 +183,7 @@ As explained above, an es-module must have a selector for it to be found in a HT
 Notice how `selector` is a simple variable assigment, not a property of an object literal.
 It is important to have in the code some kind of *"needle in a haystack"* to search for, it might make the code more verbose but in the end, when minified, the code will look like this:
 ```javascript
-const n = document.querySelector( "#nav" );
-n.addEventListener( "click", c );
+document.querySelector( "#nav" ).addEventListener( "click", c );
 ```
 And that'll be okay since the `graph.json` created at build-time is all you need to properly load the modules.
 
