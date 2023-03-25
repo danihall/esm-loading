@@ -89,8 +89,11 @@ Here is a list of events and DOM APIs that are used to dynamically load a module
 - `focusin`: useful for elements like `<input>`, `<form>`, etc
 - `IntersectionObserver`: load a module when related Element is in viewport
 
-The `MutationObserver` API could have been used to dynamically load a module when a specific HTML is injected in the page, but this requires to observe all nodes and their descendants (subtree: true) on a page, which can be costly performance-wise. Instead, it is better to use a publish/subscribe system to notify the module `esm-loader.js` that HTML has been injected, the module will simply search for any selector in the injected String and load the corresponding module if a match is found.
-It's up to you tu create the publish/subscribe system, although for the sake of the example, a file `pubsub.js` is located in this repo.
+The `MutationObserver` API could have been used to dynamically load a module when a specific HTML is injected in the page, but this requires to observe all nodes and their descendants (subtree: true) on a page, which can be costly performance-wise.
+
+Instead, it is better to use a publish/subscribe system to notify the module `esm-loader.js` that some HTML has been injected, the module will then simply search for any selector in the injected String and load the corresponding module if a match is found.
+
+It's up to you to create the publish/subscribe system, although for the sake of the example, a file `pubsub.js` is located in this repo.
 
 # how to use
 Don't forget to run `yarn` to install the project dependencies.
