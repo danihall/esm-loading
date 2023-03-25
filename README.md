@@ -154,7 +154,7 @@ The `JSON_DYNAMIC_MODULES` can be parsed at runtime by the script `esm-loader.js
 All in all, the minimum amount of JS will be downloaded by the browser!
 
 If you wish you can add an entry to the **"modules"** object in *assets/js/index.json*.
-A valid entry is key (value = path of your module relative to assets/js) and a associated value (value = object of `options`).
+A valid entry is a key (= path of your module relative to assets/js) and a associated value (= object of `options`).
 For details about the object of `options` paired with the module's path, see below.
 
 ## about testing
